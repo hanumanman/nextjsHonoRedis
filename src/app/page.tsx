@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <main className="h-screen text-white font-bold bg-gradient-to-r from-slate-700 to-slate-800 min-h-screen ">
-      <div className="flex flex-col items-center pt-24 px-4 gap-4 animate-in fade-in-5 slide-in-from-bottom-2.5">
+      <div className="flex flex-col items-center pt-28 px-4 gap-4 animate-in fade-in-5 slide-in-from-bottom-2.5">
         <h3 className="text-2xl font-bold">
           Search API with NextJS, Hono and Redis
         </h3>
@@ -52,11 +52,10 @@ export default function Home() {
             onValueChange={setInput}
           />
           <CommandList>
-            {searchResult?.result.length === 0 ? (
+            {searchResult?.result.length === 0 && (
               <CommandEmpty>No results found.</CommandEmpty>
-            ) : null}
-
-            {!searchResult?.result ? null : (
+            )}
+            {searchResult?.result && (
               <CommandGroup heading="Results">
                 {searchResult?.result.map((item, index) => (
                   <CommandItem
@@ -70,15 +69,14 @@ export default function Home() {
                 ))}
               </CommandGroup>
             )}
-            {searchResult?.result.length ? (
-              <p className="text-sm text-center">
-                Found {searchResult?.result.length}{" "}
-                {searchResult.result.length === 1 ? "result" : "results"} in{" "}
-                {searchResult?.duration ? searchResult.duration.toFixed(2) : 0}{" "}
-                ms
-              </p>
-            ) : null}
           </CommandList>
+          {searchResult?.result && searchResult.result.length > 0 && (
+            <p className="text-sm text-center">
+              ⚡ Found {searchResult?.result.length}{" "}
+              {searchResult.result.length === 1 ? "result" : "results"} in{" "}
+              {searchResult?.duration && searchResult.duration.toFixed(2)} ms
+            </p>
+          )}
         </Command>
       </div>
     </main>
