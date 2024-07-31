@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <main className="h-screen text-white font-bold bg-gradient-to-r from-slate-700 to-slate-800 min-h-screen ">
-      <div className="flex flex-col items-center p-24 gap-4 animate-in fade-in-5 slide-in-from-bottom-2.5">
+      <div className="flex flex-col items-center pt-24 px-4 gap-4 animate-in fade-in-5 slide-in-from-bottom-2.5">
         <h3 className="text-2xl font-bold">
           Search API with NextJS, Hono and Redis
         </h3>
