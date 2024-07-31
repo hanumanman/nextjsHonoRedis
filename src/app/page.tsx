@@ -1,6 +1,13 @@
 "use client";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { debounce } from "lodash";
-import { debugPort } from "process";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function Home() {
@@ -12,17 +19,16 @@ export default function Home() {
 
   const fetchData = useCallback(async (input: string) => {
     if (!input) return setSearchResult(undefined);
-    const start = performance.now();
-    const result = await fetch(`/api/search?q=${input}`);
-    const duration = performance.now() - start;
-    const json = await result.json();
-    setInput(json.input);
-    setSearchResult({ result: json.result, duration });
+    const result = await fetch(
+      `https://fastapi.hanumanman37.workers.dev/api/search?q=${input}`
+    );
+    const res = await result.json();
+    setSearchResult(res);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const debouncedFetchData = useMemo(
-    () => debounce(fetchData, 500),
+    () => debounce(fetchData, 200),
     [fetchData]
   );
 
@@ -30,21 +36,51 @@ export default function Home() {
     debouncedFetchData(input);
   }, [debouncedFetchData, input]);
 
+  console.log(searchResult?.result);
+
   return (
-    <div className="flex min-h-screen flex-col items-center p-24 gap-4">
-      <h3 className="text-2xl font-bold">
-        Fast and simple search with nextjs, hono and redis
-      </h3>
-      <input
-        className="w-full rounded-lg border-2 border-gray-300 p-2 text-lg bg-black text-white"
-        type="text"
-        value={input}
-        onChange={(e) => {
-          setInput(e.target.value);
-        }}
-      />
-      <p>{input}</p>
-      <p>{searchResult?.result.join(", ")}</p>
-    </div>
+    <main className="h-screen text-white font-bold bg-gradient-to-r from-slate-700 to-slate-800 min-h-screen ">
+      <div className="flex flex-col items-center p-24 gap-4 animate-in fade-in-5 slide-in-from-bottom-2.5">
+        <h3 className="text-2xl font-bold">
+          Search API with NextJS, Hono and Redis
+        </h3>
+
+        <Command className="w-full rounded-lg max-w-md border-2 border-slate-500 p-2 text-lg bg-slate-900 text-white">
+          <CommandInput
+            placeholder="Type country name to search"
+            value={input}
+            onValueChange={setInput}
+          />
+          <CommandList>
+            {searchResult?.result.length === 0 ? (
+              <CommandEmpty>No results found.</CommandEmpty>
+            ) : null}
+
+            {!searchResult?.result ? null : (
+              <CommandGroup heading="Results">
+                {searchResult?.result.map((item, index) => (
+                  <CommandItem
+                    className="text-white"
+                    key={item + index}
+                    value={item}
+                    onSelect={setInput}
+                  >
+                    {item}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+            {searchResult?.result.length ? (
+              <p className="text-sm text-center">
+                Found {searchResult?.result.length}{" "}
+                {searchResult.result.length === 1 ? "result" : "results"} in{" "}
+                {searchResult?.duration ? searchResult.duration.toFixed(2) : 0}{" "}
+                ms
+              </p>
+            ) : null}
+          </CommandList>
+        </Command>
+      </div>
+    </main>
   );
 }
