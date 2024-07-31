@@ -2,5 +2,5 @@ name = "fastapi"
 compatibility_date = "2024-07-31"
 
 [vars]
-UPSTASH_REDIS_REST_TOKEN = "AbT8AAIjcDEzNjBmZmIzMTU4NTM0MTUzYTFjOTYwMzZiZWVhY2E3NnAxMA"
-UPSTASH_REDIS_REST_URL = "https://optimal-roughy-46332.upstash.io"
+UPSTASH_REDIS_REST_TOKEN = "yourtoken"
+UPSTASH_REDIS_REST_URL = "yoururl"
